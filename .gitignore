@@ -203,9 +203,6 @@ Backup*/
 UpgradeLog*.XML
 UpgradeLog*.htm
 
-## NuGet
-packages/
-
 ## Business Intelligence projects
 
 *.rdl.data
