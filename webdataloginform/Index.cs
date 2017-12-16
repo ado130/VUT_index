@@ -78,6 +78,15 @@ namespace VUT_index
                             chb_mail.Checked = true;
                             chb_mailRemember.Checked = true;
                         }
+
+                        line = sr.ReadLine();
+                        if(line == "True")
+                        {
+                            chb_autologin.Checked = true;
+                        }
+
+                        line = sr.ReadLine();
+                        cb_refresh.SelectedIndex = Convert.ToInt16(line);
                     }
                 }
                 catch(Exception)
@@ -85,6 +94,11 @@ namespace VUT_index
 
                     //throw;
                 }
+            }
+
+            if(chb_autologin.Checked && tb_login.Text != "" && tb_password.Text != "")
+            {
+                btn_login.PerformClick();
             }
         }
 
@@ -335,46 +349,6 @@ namespace VUT_index
                     }
                     else
                     {
-                        //if((chb_loginRemember.Checked && tb_login.Text != "" && tb_password.Text != "") || (chb_mailRemember.Checked && tb_mail.Text != "" && MailValid(tb_mail.Text)))
-                        //{
-                            if(!File.Exists("data.dll"))
-                            {
-                                var fileCreateHandler = File.Create("data.dll");
-                                fileCreateHandler.Close();
-                            }
-                            try
-                            {
-                                using(StreamWriter sw = new StreamWriter("data.dll"))
-                                {
-                                    if(chb_loginRemember.Checked)
-                                    {
-                                        sw.WriteLine(tb_login.Text);
-                                        sw.WriteLine(tb_password.Text);
-                                    }
-                                    else
-                                    {
-                                        sw.WriteLine("");
-                                        sw.WriteLine("");
-                                    }
-                                    sw.WriteLine(chb_loginRemember.Checked);
-
-                                    if(chb_mailRemember.Checked)
-                                    {
-                                        sw.WriteLine(tb_mail.Text);
-                                    }
-                                    else
-                                    {
-                                        sw.WriteLine("");
-                                    }
-                                    sw.WriteLine(chb_mailRemember.Checked);
-                                }
-                            }
-                            catch(Exception)
-                            {
-                                //throw;
-                            }
-                        //}
-
                         // Naplnenie comboboxu pre vyplnenie zmeny roku
                         int i = 0;               
                         HtmlElementCollection links = webBrowser.Document.GetElementsByTagName("td");
@@ -713,6 +687,50 @@ namespace VUT_index
             new Thread(() => new Credits().ShowDialog()).Start();
             //Credits credis = new Credits();
             //credis.ShowDialog();
+        }
+
+        private void Index_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(!File.Exists("data.dll"))
+            {
+                var fileCreateHandler = File.Create("data.dll");
+                fileCreateHandler.Close();
+            }
+            try
+            {
+                using(StreamWriter sw = new StreamWriter("data.dll"))
+                {
+                    if(chb_loginRemember.Checked)
+                    {
+                        sw.WriteLine(tb_login.Text);
+                        sw.WriteLine(tb_password.Text);
+                    }
+                    else
+                    {
+                        sw.WriteLine("");
+                        sw.WriteLine("");
+                    }
+                    sw.WriteLine(chb_loginRemember.Checked);
+
+                    if(chb_mailRemember.Checked)
+                    {
+                        sw.WriteLine(tb_mail.Text);
+                    }
+                    else
+                    {
+                        sw.WriteLine("");
+                    }
+                    sw.WriteLine(chb_mailRemember.Checked);
+
+                    sw.WriteLine(chb_autologin.Checked);
+
+                    sw.WriteLine(cb_refresh.SelectedIndex);
+                }
+            }
+            catch(Exception)
+            {
+                //throw;
+            }
         }
     }
 }
